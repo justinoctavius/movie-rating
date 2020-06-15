@@ -32,7 +32,7 @@ app.post('/new',(req,res)=>{
     
     //abrir archivo
     let file = fs.readFileSync('./movies.json','utf-8');
-    console.log(file)
+    console.log(file);
     //convertilo a un arreglo
     let json = JSON.parse(file);
     //insertar un nuevo elemento
