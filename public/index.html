@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=div, initial-scale=1.0">
+    <title>movies</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="main-container">
+        <h1>Movie register</h1>
+        <form action="/new" method="POST">
+            <p>
+                <label for="name">Movie name:</label>
+                <input type="text" name="name" id="name">
+            </p>
+            <p>
+                <label for="rating">Rating:</label>
+                <input type="range" name="rating" id="rating" min="0" max="10">
+            </p>
+
+            <input type="submit" value="Save">
+
+        </form>
+    </div>
+</body>
+</html>
