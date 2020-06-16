@@ -1,45 +1,51 @@
-
 const bSubmit = document.querySelector('#bSubmit');
+let id = 0;
 
 bSubmit.addEventListener('click',()=>{
-   //validar campos
-    const name = document.querySelector('#name').value
-    const rating = document.querySelector('#rating').value
-   
-    if(name.trim() == ''){
-        alert('Should to put a movie name');
-        return null
-    }
-    //mandar solicitud POST a /new
-    fetch('/new', {
-        method:'POST',
-        headers: {'Content-Type':'application/json'},
-        body:JSON.stringify({name:name,rating:rating})
-    })
-    .then(res => res.text())
-    .then(data =>{
-        //mostrar mensaje de error/exito
-        alert(data);
-        //actualizar lista
-        loadMovies();
-    })
-
+    addMovie();
 });
 
+function addMovie(){
+    const name = document.querySelector('#name').value
+    const rating = document.querySelector('#rating').value
 
-loadMovies()
+    if(name.trim() == ''){
+        alert('should put a movie name')
+        return null;
+    }
 
-function loadMovies(){
-    fetch('/get-movie',{method:'GET'})
-    .then(res =>  res.json())
+    id++;
+
+    fetch('/new',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:id,name:name,rating:rating})
+        })
+    .then(res => res.text())
     .then(data => {
-        const movies = document.querySelector('#moviesContainer');
+        alert(data);
+        loadMovie()
+    })
+
+}
+
+loadMovie()
+
+function loadMovie(){
+    
+    fetch('/api',{method:'GET'})
+    .then(res => res.json())
+    .then(data => {
+        const container = document.querySelector('#moviesContainer');
         let html = '';
-        data.movies.forEach(item => {
-            let items = item;
-            html += `<div>${item.name}  <img src="./img/star.png" width="16" class="img">${item.rating}</div> `
+        data.movies.forEach( movie => {
+            id = movie.id;
+            html += `<div>
+            <p><span> ${movie.id}  </span>${movie.name}  <span><img src="./img/star.png" width="16">  ${movie.rating}</span></p>            
+            </div>`
         });
-        
-        movies.innerHTML = html;
+        container.innerHTML = html;
     });
+
+
 }

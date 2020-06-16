@@ -1,50 +1,38 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const fs = require('fs');
-
+const bodyParser = require('body-parser');
 const app = express();
+const port = 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static('./public'));
 
 app.get('/',(req,res)=>{
-
     res.setHeader('Content-Type','text/html');
-    res.sendFile('./public/index.html')
-    
+    res.send('./public/index.html');
 });
 
-app.get('/get-movie',(req,res)=>{
-    const file = fs.readFileSync('./movies.json');
-
-    res.setHeader("Content-Type","text/json");
-    res.send(file)
+app.get('/api',(req,res)=>{
+    const file = fs.readFileSync('./movies.json','utf-8');
+    res.setHeader('Content-Type','text/html');
+    res.send(JSON.parse(file));
 })
 
 app.post('/new',(req,res)=>{
-
     const name = req.body.name;
     const rating = req.body.rating;
-    console.log(req.body)
-    //abrir archivo
-    let file = fs.readFileSync('./movies.json','utf-8');
-    //convertilo a un arreglo
-    let json = JSON.parse(file);
+    const id = req.body.id;
 
-    //insertar un nuevo elemento
-    json.movies.push({'name':name, 'rating': parseInt(rating)})
-    //guardar json en el archivo
-  
+    const file = fs.readFileSync('./movies.json','UTF-8');
+    let json = JSON.parse(file);
+    json.movies.push({id:parseInt(id),name:name,rating:parseInt(rating)});
+
     fs.writeFileSync('./movies.json',JSON.stringify(json));
 
-    res.setHeader('Content-Type','text/json');
-    res.send('Saved success');
-
+    res.setHeader('Content-Type','text/html');
+    res.send('saved successfully');
 });
 
 
-app.listen(3000,()=>{
-    console.log('server initialize')
-});
+app.listen(port,()=>{console.log("server is running, port: "+port)})
